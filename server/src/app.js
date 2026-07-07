@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import healthRoutes from "./routes/health.routes.js";
+import errorHandler from "./middleware/error.middleware.js";
 
 const app = express();
 
@@ -23,5 +24,7 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(cookieParser());
 
 app.use("/api/v1/health", healthRoutes);
+
+app.use(errorHandler);
 
 export default app;
