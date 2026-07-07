@@ -36,3 +36,26 @@ export const BLOOD_GROUPS = Object.freeze([
   "O+",
   "O-",
 ]);
+
+export const GUJARAT_CITIES = Object.freeze([
+  "Ahmedabad",
+  "Nadiad",
+  "Anand",
+  "Vadodara",
+  "Surat",
+  "Rajkot",
+  "Gandhinagar",
+  "Bhavnagar",
+  "Jamnagar",
+  "Mehsana",
+  "Bhuj",
+  "Junagadh",
+  "Veraval",
+  "Patan",
+  "Morbi",
+  "Navsari",
+  "Vapi",
+  "Bharuch",
+  "Himatnagar",
+  "Palanpur",
+]);
