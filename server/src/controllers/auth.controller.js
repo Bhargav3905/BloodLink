@@ -117,7 +117,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     {
       $set: { refreshToken: "" },
     },
-    { new: true },
+    { returnDocument: "after" },
   );
 
   return res
