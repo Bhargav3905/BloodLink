@@ -6,6 +6,7 @@ import cookieOptions from "../utils/cookieOptions.js";
 import jwt from "jsonwebtoken";
 
 import { registerSchema, loginSchema } from "../validations/auth.validation.js";
+import { USER_ROLES } from "../constants/index.js";
 
 const generateAccessAndRefreshTokens = async (userId) => {
   const user = await User.findById(userId);
@@ -47,7 +48,14 @@ const registerUser = asyncHandler(async (req, res) => {
     );
   }
 
-  const user = await User.create(validatedData);
+  const isPatient =
+    validatedData.role === USER_ROLES.PATIENT || !validatedData.role;
+
+  const user = await User.create({
+    ...validatedData,
+    role: validatedData.role || USER_ROLES.PATIENT,
+    isApproved: isPatient,
+  });
 
   const createdUser = await User.findById(user._id).select(
     "-password -refreshToken",
@@ -83,8 +91,12 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   // Approval required for donor & hospital
-  if ((user.role === "donor" || user.role === "hospital") && !user.isApproved) {
-    throw new ApiError(403, "Your account is waiting for admin approval");
+  if ((user.role === USER_ROLES.DONOR || user.role === USER_ROLES.HOSPITAL) && !user.isApproved) {
+    throw new ApiError(403, "Your account is awaiting admin approval");
+  }
+
+  if (!user.isActive) {
+    throw new ApiError(403, "Your account has been rejected");
   }
 
   const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(

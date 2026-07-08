@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import User from "../models/user.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
@@ -5,6 +6,7 @@ import ApiResponse from "../utils/ApiResponse.js";
 
 import { updateProfileSchema } from "../validations/user.validation.js";
 import { userQuerySchema } from "../validations/query.validation.js";
+import { USER_ROLES } from "../constants/index.js";
 
 // Get logged-in user
 const getCurrentUser = asyncHandler(async (req, res) => {
@@ -56,6 +58,7 @@ const updateProfile = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, updatedUser, "Profile updated successfully"));
 });
 
+// Search, Filter, Sort & Get All Users
 const getAllUsers = asyncHandler(async (req, res) => {
   const validationResult = userQuerySchema.safeParse(req.query);
 
@@ -67,7 +70,8 @@ const getAllUsers = asyncHandler(async (req, res) => {
     );
   }
 
-  const { page, limit, role, city, search, sortBy, order } = validationResult.data;
+  const { page, limit, role, city, search, sortBy, order } =
+    validationResult.data;
 
   const filter = {};
 
@@ -114,4 +118,103 @@ const getAllUsers = asyncHandler(async (req, res) => {
   );
 });
 
-export { getCurrentUser, updateProfile, getAllUsers };
+const getPendingUsers = asyncHandler(async (req, res) => {
+  const pendingUsers = await User.find({
+    role: {
+      $in: [USER_ROLES.DONOR, USER_ROLES.HOSPITAL],
+    },
+    isApproved: false,
+    isActive: true,
+  })
+    .select("-password -refreshToken")
+    .sort({
+      createdAt: -1,
+    });
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, pendingUsers, "Pending users fetched successfully"),
+    );
+});
+
+const approveUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.isValidObjectId(id)) {
+    throw new ApiError(400, "Invalid user ID");
+  }
+
+  const user = await User.findById(id);
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  if (user.role === USER_ROLES.PATIENT) {
+    throw new ApiError(400, "Patients do not require approval");
+  }
+
+  if (user.isApproved) {
+    throw new ApiError(400, "User is already approved");
+  }
+
+  user.isApproved = true;
+
+  await user.save({
+    validateBeforeSave: false,
+  });
+
+  const approvedUser = await User.findById(id).select(
+    "-password -refreshToken",
+  );
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, approvedUser, "User approved successfully"));
+});
+
+const rejectUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.isValidObjectId(id)) {
+    throw new ApiError(400, "Invalid user ID");
+  }
+
+  const user = await User.findById(id);
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  if (user.role === USER_ROLES.PATIENT) {
+    throw new ApiError(400, "Patients do not require approval");
+  }
+
+  if (user.isApproved) {
+    throw new ApiError(400, "Approved users cannot be rejected");
+  }
+
+  if (!user.isActive) {
+    throw new ApiError(400, "User already rejected");
+  }
+
+  user.isActive = false;
+
+  await user.save({
+    validateBeforeSave: false,
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "User rejected successfully"));
+});
+
+export {
+  getCurrentUser,
+  updateProfile,
+  getAllUsers,
+  getPendingUsers,
+  approveUser,
+  rejectUser,
+};
