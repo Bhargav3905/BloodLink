@@ -6,6 +6,8 @@ import healthRoutes from "./routes/health.routes.js";
 import errorHandler from "./middleware/error.middleware.js";
 import authRouter from "./routes/auth.routes.js";
 import userRouter from "./routes/user.routes.js";
+import inventoryRouter from "./routes/inventory.routes.js";
+import donationRouter from "./routes/donation.routes.js";
 
 const app = express();
 
@@ -31,6 +33,10 @@ app.use("/api/v1/health", healthRoutes);
 app.use("/api/v1/auth", authRouter);
 
 app.use("/api/v1/users", userRouter);
+
+app.use("/api/v1/inventory", inventoryRouter);
+
+app.use("/api/v1/donations", donationRouter);
 
 app.use(errorHandler);
 

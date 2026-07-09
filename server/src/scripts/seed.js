@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 
 import connectDB from "../database/index.js";
 import seedAdmin from "../seed/admin.seed.js";
+import seedInventory from "../seed/inventory.seed.js";
 
 dotenv.config({
   path: "./.env",
@@ -11,6 +12,7 @@ const runSeeder = async () => {
   try {
     await connectDB();
     await seedAdmin();
+    await seedInventory();
 
     console.log("🌱 Seeding completed.");
     process.exit(0);
