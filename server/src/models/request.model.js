@@ -40,6 +40,12 @@ const requestSchema = new mongoose.Schema(
       enum: Object.values(REQUEST_STATUS),
       default: REQUEST_STATUS.PENDING,
     },
+    razorpayOrderId: {
+      type: String,
+    },
+    razorpayPaymentId: {
+      type: String,
+    },
   },
   { timestamps: true },
 );

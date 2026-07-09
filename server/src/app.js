@@ -8,7 +8,8 @@ import authRouter from "./routes/auth.routes.js";
 import userRouter from "./routes/user.routes.js";
 import inventoryRouter from "./routes/inventory.routes.js";
 import donationRouter from "./routes/donation.routes.js";
-import requestRouter from "./routes/request.routes.js"
+import requestRouter from "./routes/request.routes.js";
+import paymentRouter from "./routes/payment.routes.js";
 
 const app = express();
 
@@ -40,6 +41,8 @@ app.use("/api/v1/inventory", inventoryRouter);
 app.use("/api/v1/donations", donationRouter);
 
 app.use("/api/v1/requests", requestRouter);
+
+app.use("/api/v1/payments", paymentRouter);
 
 app.use(errorHandler);
 
