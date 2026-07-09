@@ -31,4 +31,23 @@ const loginSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
-export { registerSchema, loginSchema };
+const forgotPasswordSchema = z.object({
+  email: z.string().trim().email("Invalid email address").toLowerCase(),
+});
+
+const resetPasswordSchema = z.object({
+  token: z.string().min(1, "Reset token is required"),
+
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .regex(/[A-Z]/, "Password must contain one uppercase letter")
+    .regex(/[a-z]/, "Password must contain one lowercase letter")
+    .regex(/[0-9]/, "Password must contain one number")
+    .regex(
+      /[!@#$%^&*(),.?":{}|<>]/,
+      "Password must contain one special character",
+    ),
+});
+
+export { registerSchema, loginSchema, forgotPasswordSchema, resetPasswordSchema };

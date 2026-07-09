@@ -101,6 +101,18 @@ const verifyPayment = asyncHandler(async (req, res) => {
 
   await request.save();
 
+  const user = await User.findById(request.requester);
+
+  await sendEmail({
+    to: user.email,
+    subject: "Blood Request Completed",
+    html: paymentSuccessEmail(
+      user.fullName,
+      request.bloodGroup,
+      request.quantity,
+    ),
+  });
+
   return res
     .status(200)
     .json(new ApiResponse(200, request, "Payment verified successfully"));

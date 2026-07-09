@@ -4,8 +4,15 @@ import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import cookieOptions from "../utils/cookieOptions.js";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
+import sendEmail from "../utils/sendEmail.js";
 
-import { registerSchema, loginSchema } from "../validations/auth.validation.js";
+import {
+  registerSchema,
+  loginSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+} from "../validations/auth.validation.js";
 import { USER_ROLES } from "../constants/index.js";
 
 const generateAccessAndRefreshTokens = async (userId) => {
@@ -91,7 +98,10 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   // Approval required for donor & hospital
-  if ((user.role === USER_ROLES.DONOR || user.role === USER_ROLES.HOSPITAL) && !user.isApproved) {
+  if (
+    (user.role === USER_ROLES.DONOR || user.role === USER_ROLES.HOSPITAL) &&
+    !user.isApproved
+  ) {
     throw new ApiError(403, "Your account is awaiting admin approval");
   }
 
@@ -185,4 +195,98 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     );
 });
 
-export { registerUser, loginUser, logoutUser, refreshAccessToken };
+const forgotPassword = asyncHandler(async (req, res) => {
+  const validationResult = forgotPasswordSchema.safeParse(req.body);
+
+  if (!validationResult.success) {
+    throw new ApiError(400, "Validation Failed", validationResult.error.issues);
+  }
+
+  const { email } = validationResult.data;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  // Generate secure token
+  const resetToken = crypto.randomBytes(32).toString("hex");
+
+  // Store hashed token
+  user.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  // Token expires in 15 minutes
+  user.resetPasswordExpires = Date.now() + 15 * 60 * 1000;
+
+  await user.save({
+    validateBeforeSave: false,
+  });
+
+  const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
+
+  await sendEmail({
+    to: user.email,
+    subject: "BloodLink Password Reset",
+    html: `
+      <h2>Password Reset</h2>
+      <p>Click the button below to reset your password.</p>
+      <a href="${resetUrl}">
+        Reset Password
+      </a>
+      <p>This link expires in 15 minutes.</p>
+    `,
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Password reset email sent successfully"));
+});
+
+const resetPassword = asyncHandler(async (req, res) => {
+  const validationResult = resetPasswordSchema.safeParse(req.body);
+
+  if (!validationResult.success) {
+    throw new ApiError(400, "Validation Failed", validationResult.error.issues);
+  }
+
+  const { token, password } = validationResult.data;
+
+  const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken: hashedToken,
+    resetPasswordExpires: {
+      $gt: Date.now(),
+    },
+  });
+
+  if (!user) {
+    throw new ApiError(400, "Invalid or expired reset token");
+  }
+
+  user.password = password;
+
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpires = undefined;
+
+  user.refreshToken = "";
+
+  await user.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Password reset successfully"));
+});
+
+export {
+  registerUser,
+  loginUser,
+  logoutUser,
+  refreshAccessToken,
+  forgotPassword,
+  resetPassword
+};

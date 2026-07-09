@@ -165,6 +165,12 @@ const approveUser = asyncHandler(async (req, res) => {
     validateBeforeSave: false,
   });
 
+  await sendEmail({
+    to: user.email,
+    subject: "BloodLink Account Approved",
+    html: approvalEmail(user.fullName),
+  });
+
   const approvedUser = await User.findById(id).select(
     "-password -refreshToken",
   );
@@ -203,6 +209,12 @@ const rejectUser = asyncHandler(async (req, res) => {
 
   await user.save({
     validateBeforeSave: false,
+  });
+
+  await sendEmail({
+    to: user.email,
+    subject: "BloodLink Account Approved",
+    html: approvalEmail(user.fullName),
   });
 
   return res
