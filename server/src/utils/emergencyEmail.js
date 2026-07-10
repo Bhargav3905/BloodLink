@@ -1,3 +1,6 @@
+import { emergencyEmail } from "../templates/emailTemplate";
+import sendEmail from "./sendEmail";
+
 export const sendEmergencyAlert = async (request) => {
   const donors = await User.find({
     role: USER_ROLES.DONOR,

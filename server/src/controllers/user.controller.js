@@ -7,6 +7,7 @@ import ApiResponse from "../utils/ApiResponse.js";
 import { updateProfileSchema } from "../validations/user.validation.js";
 import { userQuerySchema } from "../validations/query.validation.js";
 import { USER_ROLES } from "../constants/index.js";
+import { approvalEmail, rejectionEmail } from "../templates/emailTemplate.js";
 
 // Get logged-in user
 const getCurrentUser = asyncHandler(async (req, res) => {
@@ -214,7 +215,7 @@ const rejectUser = asyncHandler(async (req, res) => {
   await sendEmail({
     to: user.email,
     subject: "BloodLink Account Approved",
-    html: approvalEmail(user.fullName),
+    html: rejectionEmail(user.fullName),
   });
 
   return res

@@ -8,6 +8,7 @@ import ApiResponse from "../utils/ApiResponse.js";
 import razorpay from "../utils/razorpay.js";
 
 import { REQUEST_STATUS } from "../constants/index.js";
+import { paymentSuccessEmail } from "../templates/emailTemplate.js";
 
 const createOrder = asyncHandler(async (req, res) => {
   const request = await Request.findById(req.params.id);
