@@ -152,7 +152,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
   const incomingRefreshToken =
-    req.cookies.refreshToken || req.body.refreshToken;
+    req.cookies?.refreshToken || req.body?.refreshToken;
 
   if (!incomingRefreshToken) {
     throw new ApiError(401, "Refresh token is required");
@@ -183,6 +183,10 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     user._id,
   );
 
+  const loggedInUser = await User.findById(user._id).select(
+    "-password -refreshToken",
+  );
+
   return res
     .status(200)
     .cookie("accessToken", accessToken, cookieOptions)
@@ -190,7 +194,9 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { accessToken },
+        {
+          accessToken, user: loggedInUser,
+        },
         "Access token refreshed successfully",
       ),
     );

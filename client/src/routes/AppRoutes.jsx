@@ -1,15 +1,18 @@
 import { Routes, Route } from 'react-router-dom';
 
+import GuestRoute from '../components/auth/GuestRoute';
+import ProtectedRoute from '../components/auth/ProtectedRoute';
 import PublicLayout from '../layouts/PublicLayout';
-import AuthLayout from '../layouts/AuthLayout';
-import DashboardLayout from '../layouts/DashboardLayout';
 
 import Home from '../pages/Home';
-import Login from '../pages/Login';
-import Register from '../pages/Register';
-import ForgotPassword from '../pages/ForgotPassword';
+import Login from '../features/auth/pages/Login';
+import Register from '../features/auth/pages/Register';
+import ForgotPassword from '../features/auth/pages/ForgotPassword';
+import ResetPassword from '../features/auth/pages/ResetPassword';
 import Dashboard from '../pages/Dashboard';
 import NotFound from '../pages/NotFound';
+
+import { ROUTES } from '../constants/routes';
 
 const AppRoutes = () => {
   return (
@@ -20,15 +23,16 @@ const AppRoutes = () => {
       </Route>
 
       {/* Authentication Routes */}
-      <Route element={<AuthLayout />}>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route element={<GuestRoute />}>
+        <Route path={ROUTES.LOGIN} element={<Login />} />
+        <Route path={ROUTES.REGISTER} element={<Register />} />
+        <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
+        <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
       </Route>
 
       {/* Protected Routes */}
-      <Route element={<DashboardLayout />}>
-        <Route path="/dashboard" element={<Dashboard />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
       </Route>
 
       {/* 404 */}

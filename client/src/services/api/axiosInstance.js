@@ -4,9 +4,6 @@ import env from '../../config/env';
 const axiosInstance = axios.create({
   baseURL: env.API_URL,
   withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 axiosInstance.interceptors.request.use(

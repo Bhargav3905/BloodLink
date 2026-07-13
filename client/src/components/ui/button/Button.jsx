@@ -1,16 +1,19 @@
 import { forwardRef } from 'react';
 import { buttonVariants } from './buttonVariants';
 import { cn } from '../../../utils/cn';
+import { ButtonLoader } from '../../feedback/loader';
 
 const Button = forwardRef(
   (
     {
       children,
+      loading = false,
       className,
       variant,
       size,
       fullWidth,
       type = 'button',
+      disabled,
       ...props
     },
     ref
@@ -19,6 +22,7 @@ const Button = forwardRef(
       <button
         ref={ref}
         type={type}
+        disabled={loading || disabled}
         className={cn(
           buttonVariants({
             variant,
@@ -29,6 +33,8 @@ const Button = forwardRef(
         )}
         {...props}
       >
+        {loading && <ButtonLoader />}
+
         {children}
       </button>
     );
