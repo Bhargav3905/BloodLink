@@ -2,9 +2,6 @@ import { useEffect, useState } from 'react';
 
 import adminService from '../services/admin.service';
 
-import DashboardLayout from '../../../layouts/DashboardLayout';
-import StatCard from '../../../components/dashboard/common/StatCard';
-
 const AdminHome = () => {
   const [overview, setOverview] = useState(null);
   const [inventorySummary, setInventorySummary] = useState(null);
@@ -32,13 +29,9 @@ const AdminHome = () => {
         ]);
 
         setOverview(overviewResponse.data);
-
         setInventorySummary(inventoryResponse.data);
-
         setRequestStatistics(requestResponse.data);
-
         setDonationStatistics(donationResponse.data);
-
         setLowStock(lowStockResponse.data);
       } finally {
         setLoading(false);
@@ -49,42 +42,34 @@ const AdminHome = () => {
   }, []);
 
   if (loading) {
-    return (
-      <DashboardLayout title="Admin Dashboard">
-        <p>Loading...</p>
-      </DashboardLayout>
-    );
+    return <p>Loading...</p>;
   }
 
   return (
-    <DashboardLayout title="Admin Dashboard">
+    <>
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+        <p className="text-slate-500">Monitor users, requests and inventory.</p>
+      </div>
+
       <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-        <StatCard title="Total Users" value={overview?.totalUsers || 0} />
-
-        <StatCard title="Total Donors" value={overview?.totalDonors || 0} />
-
-        <StatCard title="Total Patients" value={overview?.totalPatients || 0} />
-
-        <StatCard title="Total Hospitals" value={overview?.totalHospitals || 0} />
-
-        <StatCard title="Pending Approvals" value={overview?.pendingApprovals || 0} />
-
-        <StatCard title="Completed Requests" value={overview?.completedRequests || 0} />
-
-        <StatCard title="Inventory Units" value={inventorySummary?.totalUnits || 0} />
-
-        <StatCard title="Total Donations" value={donationStatistics?.totalDonations || 0} />
-
-        <StatCard title="Pending Requests" value={requestStatistics?.pending || 0} />
-
-        <StatCard title="Rejected Requests" value={requestStatistics?.rejected || 0} />
+        <div title="Total Users" value={overview?.totalUsers || 0}></div>
+        <div title="Total Donors" value={overview?.totalDonors || 0}></div>
+        <div title="Total Patients" value={overview?.totalPatients || 0}></div>
+        <div title="Total Hospitals" value={overview?.totalHospitals || 0}></div>
+        <div title="Pending Approvals" value={overview?.pendingApprovals || 0}></div>
+        <div title="Completed Requests" value={overview?.completedRequests || 0}></div>
+        <div title="Inventory Units" value={inventorySummary?.totalUnits || 0}></div>
+        <div title="Total Donations" value={donationStatistics?.totalDonations || 0}></div>
+        <div title="Pending Requests" value={requestStatistics?.pending || 0}></div>
+        <div title="Rejected Requests" value={requestStatistics?.rejected || 0}></div>
       </div>
 
       <div className="mt-10 rounded-xl border p-6">
         <h2 className="mb-4 text-xl font-bold">Low Stock Blood Groups</h2>
 
         {lowStock.length === 0 ? (
-          <p>No Low Stock</p>
+          <p>No low stock blood groups.</p>
         ) : (
           <ul className="space-y-2">
             {lowStock.map((item) => (
@@ -95,7 +80,7 @@ const AdminHome = () => {
           </ul>
         )}
       </div>
-    </DashboardLayout>
+    </>
   );
 };
 

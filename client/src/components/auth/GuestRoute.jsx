@@ -1,12 +1,20 @@
-import { Outlet } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
+
 import { useAuth } from '../../contexts/AuthContext';
-import { PageLoader } from '../feedback/loader';
+
+import PageLoader from '../feedback/loader/PageLoader';
+
+import { ROUTES } from '../../constants/routes';
 
 const GuestRoute = () => {
-  const { loading } = useAuth();
+  const { loading, isAuthenticated } = useAuth();
 
   if (loading) {
     return <PageLoader />;
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to={ROUTES.DASHBOARD} replace />;
   }
 
   return <Outlet />;

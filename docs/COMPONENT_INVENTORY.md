@@ -291,8 +291,6 @@ Mobile Card View
 
 Reusable Widgets
 
-StatCard
-
 ChartCard
 
 SummaryCard
@@ -473,8 +471,6 @@ Examples
 Button
 
 DataTable
-
-StatCard
 
 DashboardLayout
 

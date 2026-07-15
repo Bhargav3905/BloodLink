@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useForm, useWatch } from 'react-hook-form';
 
-import { Button } from '../../../components/ui/button';
-import { FormField } from '../../../components/ui/input';
+import Button from '../../../components/ui/button/Button';
+import FormField from '../../../components/ui/input/FormField';
 
 import { bloodGroupOptions } from '../../../constants/bloodGroups';
 import { cityOptions } from '../../../constants/cities';

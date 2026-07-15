@@ -21,22 +21,27 @@ export const SIDEBAR_ITEMS = {
     {
       label: 'Users',
       icon: Users,
-      path: '/admin/users',
+      path: ROUTES.ADMIN_USERS,
     },
     {
       label: 'Inventory',
       icon: Package,
-      path: '/admin/inventory',
+      path: ROUTES.ADMIN_INVENTORY,
     },
     {
       label: 'Requests',
       icon: ClipboardList,
-      path: '/admin/requests',
+      path: ROUTES.ADMIN_REQUESTS,
     },
     {
       label: 'Analytics',
       icon: BarChart3,
-      path: '/admin/analytics',
+      path: ROUTES.ADMIN_ANALYTICS,
+    },
+    {
+      label: 'Profile',
+      icon: User,
+      path: ROUTES.PROFILE,
     },
   ],
 
@@ -49,12 +54,12 @@ export const SIDEBAR_ITEMS = {
     {
       label: 'Donate Blood',
       icon: Heart,
-      path: '/donor/donate',
+      path: ROUTES.DONOR_DONATIONS,
     },
     {
       label: 'Donation History',
       icon: ClipboardList,
-      path: '/donor/history',
+      path: ROUTES.DONOR_HISTORY,
     },
     {
       label: 'Profile',
@@ -72,7 +77,7 @@ export const SIDEBAR_ITEMS = {
     {
       label: 'Blood Requests',
       icon: ClipboardList,
-      path: '/patient/requests',
+      path: ROUTES.PATIENT_REQUESTS,
     },
     {
       label: 'Profile',
@@ -90,12 +95,12 @@ export const SIDEBAR_ITEMS = {
     {
       label: 'Inventory',
       icon: Package,
-      path: '/hospital/inventory',
+      path: ROUTES.HOSPITAL_INVENTORY,
     },
     {
       label: 'Blood Requests',
       icon: ClipboardList,
-      path: '/hospital/requests',
+      path: ROUTES.HOSPITAL_REQUESTS,
     },
     {
       label: 'Profile',

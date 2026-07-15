@@ -2,8 +2,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
-import { Button } from '../../../components/ui/button';
-import { FormField } from '../../../components/ui/input';
+import Button from '../../../components/ui/button/Button';
+import FormField from '../../../components/ui/input/FormField';
 
 import authService from '../services/auth.service';
 import getApiError from '../../../utils/apiError';

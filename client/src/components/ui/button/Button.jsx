@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 import { buttonVariants } from './buttonVariants';
 import { cn } from '../../../utils/cn';
-import { ButtonLoader } from '../../feedback/loader';
+import ButtonLoader from '../../feedback/loader/ButtonLoader';
 
 const Button = forwardRef(
   (

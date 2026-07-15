@@ -6,13 +6,28 @@ export const ROUTES = {
   FORGOT_PASSWORD: '/forgot-password',
   RESET_PASSWORD: '/reset-password/:token',
 
-  // Dashboard
+  // Common
   DASHBOARD: '/dashboard',
-
-  // Features
   PROFILE: '/profile',
-  DONATIONS: '/donations',
-  REQUESTS: '/requests',
-  INVENTORY: '/inventory',
-  ANALYTICS: '/analytics',
+
+  // Admin
+  ADMIN_DASHBOARD: '/dashboard',
+  ADMIN_USERS: '/admin/users',
+  ADMIN_INVENTORY: '/admin/inventory',
+  ADMIN_REQUESTS: '/admin/requests',
+  ADMIN_ANALYTICS: '/admin/analytics',
+
+  // Donor
+  DONOR_DASHBOARD: '/dashboard',
+  DONOR_DONATIONS: '/donor/donate',
+  DONOR_HISTORY: '/donor/history',
+
+  // Patient
+  PATIENT_DASHBOARD: '/dashboard',
+  PATIENT_REQUESTS: '/patient/requests',
+
+  // Hospital
+  HOSPITAL_DASHBOARD: '/dashboard',
+  HOSPITAL_INVENTORY: '/hospital/inventory',
+  HOSPITAL_REQUESTS: '/hospital/requests',
 };

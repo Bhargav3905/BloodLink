@@ -2,7 +2,7 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import { ROUTES } from '../../constants/routes';
 import { useAuth } from '../../contexts/AuthContext';
-import { PageLoader } from '../feedback/loader';
+import PageLoader from '../feedback/loader/PageLoader';
 
 const ProtectedRoute = () => {
   const { isAuthenticated, loading } = useAuth();
