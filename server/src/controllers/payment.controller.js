@@ -93,12 +93,12 @@ const verifyPayment = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Insufficient blood inventory");
   }
 
-  inventory.quantity -= request.quantity;
-
   request.paymentStatus = true;
   request.razorpayOrderId = razorpay_order_id;
   request.razorpayPaymentId = razorpay_payment_id;
   request.status = REQUEST_STATUS.COMPLETED;
+
+  inventory.quantity -= request.quantity;
 
   await Promise.all([inventory.save(), request.save()]);
 

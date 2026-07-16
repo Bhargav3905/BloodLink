@@ -34,7 +34,15 @@ const createRequest = asyncHandler(async (req, res) => {
 
   // Patient quantity restriction
   if (user.role === USER_ROLES.PATIENT && quantity > 2) {
-    throw new ApiError(400, "Patients can request a maximum of 2 blood units");
+    throw new ApiError(400, "Patients can request a maximum of 2 blood units.");
+  }
+
+  // Hospital quantity restriction
+  if (user.role === USER_ROLES.HOSPITAL && quantity > 5) {
+    throw new ApiError(
+      400,
+      "Hospitals can request a maximum of 5 blood units.",
+    );
   }
 
   const inventory = await Inventory.findOne({
@@ -116,47 +124,26 @@ const rejectRequest = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, request, "Request rejected successfully"));
 });
 
-const completeRequest = asyncHandler(async (req, res) => {
-  const request = await Request.findById(req.params.id);
-
-  if (!request) {
-    throw new ApiError(404, "Request not found");
-  }
-
-  if (request.status !== REQUEST_STATUS.PAYMENT_PENDING) {
-    throw new ApiError(400, "Only payment pending requests can be completed");
-  }
-
-  const inventory = await Inventory.findOne({
-    bloodGroup: request.bloodGroup,
-  }).select("bloodGroup quantity");
-
-  if (!inventory) {
-    throw new ApiError(404, "Inventory not found");
-  }
-
-  if (inventory.quantity < request.quantity) {
-    throw new ApiError(400, "Insufficient blood inventory");
-  }
-
-  inventory.quantity -= request.quantity;
-
-  request.paymentStatus = true;
-  request.status = REQUEST_STATUS.COMPLETED;
-  
-  await Promise.all([inventory.save(), request.save()]);
+const getMyRequests = asyncHandler(async (req, res) => {
+  const requests = await Request.find({
+    requester: req.user._id,
+  })
+    .sort({
+      createdAt: -1,
+    })
+    .lean();
 
   return res
     .status(200)
     .json(
-      new ApiResponse(200, request, "Blood request completed successfully"),
+      new ApiResponse(200, requests, "Request history fetched successfully"),
     );
 });
 
 export {
   createRequest,
+  getMyRequests,
   getPendingRequests,
   approveRequest,
   rejectRequest,
-  completeRequest,
 };
