@@ -1,9 +1,7 @@
-const Home = () => {
-  return (
-    <div>
-      
-    </div>
-  )
-}
+import HomePage from '../features/home/pages/HomePage';
 
-export default Home
+const Home = () => {
+  return <HomePage />;
+};
+
+export default Home;
