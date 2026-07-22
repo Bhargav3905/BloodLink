@@ -16,6 +16,7 @@ const getDashboardOverview = asyncHandler(async (req, res) => {
     totalHospitals,
     pendingApprovals,
     completedRequests,
+    revenue,
   ] = await Promise.all([
     User.countDocuments(),
 
@@ -42,6 +43,26 @@ const getDashboardOverview = asyncHandler(async (req, res) => {
     Request.countDocuments({
       status: REQUEST_STATUS.COMPLETED,
     }),
+
+    Request.aggregate([
+      {
+        $match: {
+          paymentStatus: true,
+          status: REQUEST_STATUS.COMPLETED,
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalRevenue: {
+            $sum: "$processingFee",
+          },
+          totalUnitsDelivered: {
+            $sum: "$quantity",
+          },
+        },
+      },
+    ]),
   ]);
 
   return res.status(200).json(
@@ -54,6 +75,8 @@ const getDashboardOverview = asyncHandler(async (req, res) => {
         totalHospitals,
         pendingApprovals,
         completedRequests,
+        totalRevenue: revenue[0]?.totalRevenue || 0,
+        totalUnitsDelivered: revenue[0]?.totalUnitsDelivered || 0,
       },
       "Dashboard overview fetched successfully",
     ),
@@ -70,7 +93,9 @@ const getBloodGroupDistribution = asyncHandler(async (req, res) => {
       },
     },
     {
-      $sort: { bloodGroup: 1 },
+      $sort: {
+        bloodGroup: 1,
+      },
     },
   ]);
 
@@ -120,15 +145,15 @@ const getInventorySummary = asyncHandler(async (req, res) => {
     },
   ]);
 
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        { totalUnits: result[0]?.totalUnits || 0 },
-        "Inventory summary fetched successfully",
-      ),
-    );
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        totalUnits: result[0]?.totalUnits || 0,
+      },
+      "Inventory summary fetched successfully",
+    ),
+  );
 });
 
 const getRequestStatistics = asyncHandler(async (req, res) => {
@@ -177,15 +202,16 @@ const getDonationStatistics = asyncHandler(async (req, res) => {
     })
     .limit(5);
 
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        { totalDonations, recentDonations },
-        "Donation statistics fetched successfully",
-      ),
-    );
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        totalDonations,
+        recentDonations,
+      },
+      "Donation statistics fetched successfully",
+    ),
+  );
 });
 
 export {

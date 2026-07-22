@@ -27,7 +27,7 @@ const openCheckout = async ({ request, onSuccess }) => {
     amount: order.amount,
     currency: order.currency,
     name: 'BloodLink',
-    description: 'Blood Request Processing Fee',
+    description: `${request.quantity} Blood Unit${request.quantity > 1 ? 's' : ''} Processing Fee`,
     order_id: order.id,
     modal: {
       ondismiss: () => {

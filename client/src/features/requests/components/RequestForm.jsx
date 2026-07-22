@@ -23,6 +23,7 @@ const RequestForm = ({ onSuccess }) => {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
@@ -30,6 +31,9 @@ const RequestForm = ({ onSuccess }) => {
       quantity: 1,
     },
   });
+
+  const quantity = Number(watch('quantity')) || 1;
+  const estimatedTotal = quantity * PROCESSING_FEE;
 
   const onSubmit = async (data) => {
     try {
@@ -55,7 +59,6 @@ const RequestForm = ({ onSuccess }) => {
 
   return (
     <div className="rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-
       <div className="border-b border-slate-200 p-8 dark:border-slate-800">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
           <div>
@@ -69,7 +72,7 @@ const RequestForm = ({ onSuccess }) => {
             </h2>
 
             <p className="mt-2 text-slate-500 dark:text-slate-400">
-              Submit a blood request for approval. Payment is required only after approval.
+              Submit a blood request for approval. Processing charges are calculated based on the requested blood units and are payable only after admin approval.
             </p>
           </div>
 
@@ -80,9 +83,13 @@ const RequestForm = ({ onSuccess }) => {
               <span className="text-sm font-semibold">Processing Fee</span>
             </div>
 
-            <p className="mt-2 text-2xl font-bold text-slate-900 dark:text-white">
-              ₹{PROCESSING_FEE}
+            <p className="mt-2 text-lg font-semibold text-slate-900 dark:text-white">
+              ₹ {PROCESSING_FEE} per blood unit
             </p>
+
+            <p className="mt-3 text-3xl font-bold text-red-600">₹{estimatedTotal}</p>
+
+            <p className="text-xs text-slate-500 dark:text-slate-400">Estimated Total</p>
           </div>
         </div>
       </div>

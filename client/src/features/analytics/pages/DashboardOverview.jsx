@@ -7,6 +7,8 @@ import {
   Building2,
   UserRound,
   ClipboardList,
+  IndianRupee, 
+  PackageCheck,
   Activity,
   Droplets,
 } from 'lucide-react';
@@ -37,7 +39,6 @@ const DashboardOverview = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  
   const fetchDashboard = async () => {
     try {
       setRefreshing(true);
@@ -57,7 +58,7 @@ const DashboardOverview = () => {
         analyticsService.getDonationStatistics(),
         analyticsService.getLowStock(),
       ]);
-      
+
       setOverview(overviewResponse.data);
       setInventorySummary(inventoryResponse.data);
       setBloodDistribution(distributionResponse.data);
@@ -73,7 +74,7 @@ const DashboardOverview = () => {
       setRefreshing(false);
     }
   };
-  
+
   useEffect(() => {
     void fetchDashboard();
   }, []);
@@ -168,6 +169,22 @@ const DashboardOverview = () => {
           iconBg="bg-pink-100 dark:bg-pink-900/30"
           iconColor="text-pink-600"
           onClick={() => navigate(ROUTES.INVENTORY)}
+        />
+
+        <DashboardStatCard
+          title="Revenue Generated"
+          value={`₹${overview.totalRevenue}`}
+          icon={IndianRupee}
+          iconBg="bg-green-100 dark:bg-green-900/30"
+          iconColor="text-green-600"
+        />
+
+        <DashboardStatCard
+          title="Units Delivered"
+          value={overview.totalUnitsDelivered}
+          icon={PackageCheck}
+          iconBg="bg-cyan-100 dark:bg-cyan-900/30"
+          iconColor="text-cyan-600"
         />
       </div>
 

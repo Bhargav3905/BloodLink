@@ -53,11 +53,14 @@ const createRequest = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Requested quantity is not available");
   }
 
+  const processingFee = quantity * Number(process.env.PROCESSING_FEE_PER_UNIT);
+
   const request = await Request.create({
     requester: user._id,
     requesterType: user.role,
     bloodGroup,
     quantity,
+    processingFee,
   });
 
   return res

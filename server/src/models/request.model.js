@@ -29,7 +29,8 @@ const requestSchema = new mongoose.Schema(
     },
     processingFee: {
       type: Number,
-      default: () => Number(process.env.PROCESSING_FEE),
+      required: true,
+      min: 0,
     },
     paymentStatus: {
       type: Boolean,
