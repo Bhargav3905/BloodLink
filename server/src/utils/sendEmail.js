@@ -1,30 +1,26 @@
-import * as Brevo from "@getbrevo/brevo";
+import { BrevoClient } from "@getbrevo/brevo";
 
-const apiInstance = new Brevo.TransactionalEmailsApi();
-
-apiInstance.setApiKey(
-  Brevo.TransactionalEmailsApiApiKeys.apiKey,
-  process.env.BREVO_API_KEY,
-);
+const brevo = new BrevoClient({
+  apiKey: process.env.BREVO_API_KEY,
+});
 
 const sendEmail = async ({ to, subject, html }) => {
-  const email = new Brevo.SendSmtpEmail();
-
-  email.sender = {
-    name: "BloodLink",
-    email: process.env.MAIL_FROM,
-  };
-
-  email.to = [
-    {
-      email: to,
+  await brevo.transactionalEmails.sendTransacEmail({
+    sender: {
+      name: "BloodLink",
+      email: process.env.MAIL_FROM,
     },
-  ];
 
-  email.subject = subject;
-  email.htmlContent = html;
+    to: [
+      {
+        email: to,
+      },
+    ],
 
-  await apiInstance.sendTransacEmail(email);
+    subject,
+
+    htmlContent: html,
+  });
 };
 
 export default sendEmail;
