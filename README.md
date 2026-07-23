@@ -56,6 +56,7 @@ The project was built with an emphasis on clean architecture, maintainability, s
 - [Deployment](#-deployment)
 - [Why BloodLink?](#-why-bloodlink)
 - [Contributing](#-contributing)
+- [Future Improvements](#-future-improvements)
 - [License](#-license)
 - [Author](#-author)
 - [Acknowledgements](#-acknowledgements)
@@ -69,7 +70,7 @@ The project was built with an emphasis on clean architecture, maintainability, s
 > Add your deployed frontend URL here
 
 ```text
-Coming Soon
+https://blood-link-phi.vercel.app
 ```
 
 ### Backend API
@@ -77,7 +78,7 @@ Coming Soon
 > Add your deployed backend URL here
 
 ```text
-Coming Soon
+https://bloodlink-api-6cmq.onrender.com
 ```
 
 ---
@@ -1092,6 +1093,28 @@ git push origin feature/your-feature-name
 5.Open a Pull Request.
 
 Please ensure that your code follows the existing project structure, coding standards, and naming conventions.
+
+---
+
+## 🚀 Future Improvements
+
+The current release (v1.0.0) provides a complete production-ready blood bank management system. Future versions may include:
+
+- 📱 Progressive Web App (PWA) support
+- 📍 Live donor location and nearby donor search
+- 🔔 Real-time notifications using WebSockets
+- 📊 Advanced analytics and reporting dashboard
+- 🏥 Multi-branch hospital inventory management
+- 📅 Donation appointment scheduling
+- 📄 Blood request invoice and PDF generation
+- 🌐 Multi-language (i18n) support
+- 📦 Docker and Kubernetes deployment support
+- 🧪 Automated testing with Jest and Cypress
+- 🔍 Elasticsearch-powered search
+- 📲 SMS and WhatsApp notifications
+- 🤖 AI-powered blood demand forecasting
+- ☁️ AWS S3 image storage for user profiles
+- 📈 Audit logs and activity tracking
 
 ---
 
